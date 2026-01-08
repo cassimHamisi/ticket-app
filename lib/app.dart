@@ -80,8 +80,21 @@ class _AppState extends State<App> {
 Future<void> bootstrap() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initDependencies();
-  final storage = await HydratedStorage.build(
-    storageDirectory: await getApplicationDocumentsDirectory(),
-  );
-  HydratedBloc.storage = storage;
+
+  // Only initialize Hydrated storage on mobile/desktop platforms
+  // Web uses default browser storage which is handled automatically
+  if (!_isWeb()) {
+    final storage = await HydratedStorage.build(
+      storageDirectory: await getApplicationDocumentsDirectory(),
+    );
+    HydratedBloc.storage = storage;
+  }
+}
+
+bool _isWeb() {
+  try {
+    return identical(0, 0.0) == false;
+  } catch (_) {
+    return true;
+  }
 }
