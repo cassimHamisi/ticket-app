@@ -9,10 +9,14 @@ class TicketModel extends Ticket {
   });
 
   factory TicketModel.fromJson(Map<String, dynamic> json) {
+    final title = json['title'] as String? ?? '';
+    final body = json['body'] as String?;
+    final description = body ?? title;
+    
     return TicketModel(
       id: json['id'] as int,
-      title: json['title'] as String? ?? '',
-      description: json['body'] as String? ?? json['title'] as String? ?? '',
+      title: title,
+      description: description,
       isResolved: json['completed'] as bool? ?? false,
     );
   }

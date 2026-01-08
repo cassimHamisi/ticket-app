@@ -14,23 +14,26 @@ class TicketsCubit extends HydratedCubit<TicketsState> {
     emit(TicketsLoading());
     try {
       final tickets = await ticketRepository.getTickets();
-      // Merge with saved resolved states
-      final currentState = state;
-      if (currentState is TicketsLoaded) {
-        final resolvedIds = currentState.resolvedTicketIds;
-        final updatedTickets = tickets.map((ticket) {
-          if (resolvedIds.contains(ticket.id)) {
-            return ticket.copyWith(isResolved: true);
-          }
-          return ticket;
-        }).toList();
-        emit(TicketsLoaded(updatedTickets, resolvedIds));
-      } else {
-        emit(TicketsLoaded(tickets, {}));
-      }
+      final mergedTickets = _mergeResolvedStates(tickets);
+      emit(mergedTickets);
     } catch (e) {
       emit(TicketsError(e.toString()));
     }
+  }
+
+  TicketsLoaded _mergeResolvedStates(List<Ticket> tickets) {
+    final currentState = state;
+    if (currentState is TicketsLoaded) {
+      final resolvedIds = currentState.resolvedTicketIds;
+      final updatedTickets = tickets.map((ticket) {
+        if (resolvedIds.contains(ticket.id)) {
+          return ticket.copyWith(isResolved: true);
+        }
+        return ticket;
+      }).toList();
+      return TicketsLoaded(updatedTickets, resolvedIds);
+    }
+    return TicketsLoaded(tickets, {});
   }
 
   void toggleTicketResolved(int ticketId) {
@@ -73,7 +76,10 @@ class TicketsCubit extends HydratedCubit<TicketsState> {
         
         return TicketsLoaded(tickets, resolvedIds);
       }
-    } catch (_) {}
+    } catch (e) {
+      // Log deserialization error for debugging
+      print('Error deserializing tickets state: $e');
+    }
     return TicketsInitial();
   }
 

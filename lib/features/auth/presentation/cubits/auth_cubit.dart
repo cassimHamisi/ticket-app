@@ -36,7 +36,10 @@ class AuthCubit extends HydratedCubit<AuthState> {
           ),
         );
       }
-    } catch (_) {}
+    } catch (e) {
+      // Log deserialization error for debugging
+      print('Error deserializing auth state: $e');
+    }
     return AuthInitial();
   }
 

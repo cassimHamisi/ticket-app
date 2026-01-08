@@ -20,7 +20,9 @@ class ThemeCubit extends HydratedCubit<ThemeMode> {
         (e) => e.toString() == 'ThemeMode.$themeName',
         orElse: () => ThemeMode.system,
       );
-    } catch (_) {
+    } catch (e) {
+      // Log deserialization error for debugging
+      print('Error deserializing theme state: $e');
       return ThemeMode.system;
     }
   }
