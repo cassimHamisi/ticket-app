@@ -11,37 +11,112 @@ class TicketDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (ticket == null) {
-      return const Scaffold(body: Center(child: Text('Ticket not found')));
+      return Scaffold(
+        appBar: AppBar(title: const Text('Ticket Details')),
+        body: const Center(child: Text('Ticket not found')),
+      );
     }
 
-    final isResolved = ticket!.isResolved;
-
     return Scaffold(
-      appBar: AppBar(title: Text('Ticket #${ticket!.id}')),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(ticket!.title, style: Theme.of(context).textTheme.titleLarge),
-            const SizedBox(height: 12),
-            Text(ticket!.body),
-            const Spacer(),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton.icon(
-                onPressed: isResolved
-                    ? null
-                    : () {
-                        context.read<TicketCubit>().markResolved(ticket!.id);
-                        Navigator.of(context).pop();
-                      },
-                icon: const Icon(Icons.check_circle_outline),
-                label: Text(isResolved ? 'Resolved' : 'Mark as Resolved'),
+      appBar: AppBar(
+        title: Text('Ticket #${ticket!.id}'),
+        centerTitle: false,
+        actions: [
+          if (ticket!.isResolved)
+            const Padding(
+              padding: EdgeInsets.only(right: 16),
+              child: Tooltip(
+                message: 'Resolved',
+                child: Icon(Icons.check_circle, color: Colors.green),
               ),
             ),
-          ],
-        ),
+        ],
+      ),
+      body: BlocBuilder<TicketCubit, TicketState>(
+        builder: (context, state) {
+          final currentTicket = state.tickets.firstWhere(
+            (t) => t.id == ticket!.id,
+            orElse: () => ticket!,
+          );
+
+          return SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Title
+                  Text(
+                    currentTicket.title,
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Status Chip
+                  Chip(
+                    label: Text(
+                      currentTicket.isResolved ? 'RESOLVED' : 'OPEN',
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    avatar: Icon(
+                      currentTicket.isResolved
+                          ? Icons.check_circle
+                          : Icons.access_time,
+                      size: 18,
+                    ),
+                    backgroundColor: currentTicket.isResolved
+                        ? Colors.green.withOpacity(0.2)
+                        : Colors.orange.withOpacity(0.2),
+                  ),
+                  const SizedBox(height: 24),
+
+                  // Body
+                  Text(
+                    'Description',
+                    style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.outline,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    currentTicket.body,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                  const SizedBox(height: 32),
+
+                  // Mark as Resolved Button
+                  SizedBox(
+                    width: double.infinity,
+                    height: 56,
+                    child: FilledButton.icon(
+                      onPressed: currentTicket.isResolved
+                          ? null
+                          : () {
+                              context.read<TicketCubit>().markResolved(
+                                currentTicket.id,
+                              );
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Ticket marked as resolved'),
+                                  duration: Duration(milliseconds: 1500),
+                                ),
+                              );
+                            },
+                      icon: const Icon(Icons.check),
+                      label: Text(
+                        currentTicket.isResolved
+                            ? 'Already Resolved'
+                            : 'Mark as Resolved',
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
   }
