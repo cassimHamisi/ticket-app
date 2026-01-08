@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
@@ -81,20 +82,16 @@ Future<void> bootstrap() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initDependencies();
 
-  // Only initialize Hydrated storage on mobile/desktop platforms
-  // Web uses default browser storage which is handled automatically
-  if (!_isWeb()) {
-    final storage = await HydratedStorage.build(
+  if (kIsWeb) {
+    // Web: Use HydratedStorage without file system dependency
+    // It will automatically use browser localStorage/IndexedDB
+    HydratedBloc.storage = await HydratedStorage.build(
+      storageDirectory: HydratedStorage.webStorageDirectory,
+    );
+  } else {
+    // Mobile/Desktop: Use file system storage
+    HydratedBloc.storage = await HydratedStorage.build(
       storageDirectory: await getApplicationDocumentsDirectory(),
     );
-    HydratedBloc.storage = storage;
-  }
-}
-
-bool _isWeb() {
-  try {
-    return identical(0, 0.0) == false;
-  } catch (_) {
-    return true;
   }
 }
