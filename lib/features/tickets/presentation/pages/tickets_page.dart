@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../cubits/tickets_cubit.dart';
 import '../cubits/theme_cubit.dart';
-import '../../auth/presentation/cubits/auth_cubit.dart';
+import '../../../auth/presentation/cubits/auth_cubit.dart';
 import '../widgets/ticket_card.dart';
 
 class TicketsPage extends StatefulWidget {
