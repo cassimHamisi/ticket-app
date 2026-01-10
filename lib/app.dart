@@ -5,6 +5,7 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:ticket_app/core/di/injection_container.dart';
 import 'package:ticket_app/core/router/app_router.dart';
+import 'package:ticket_app/core/theme/app_theme.dart';
 import 'package:ticket_app/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:ticket_app/features/theme/presentation/cubit/theme_cubit.dart';
 import 'package:ticket_app/features/tickets/presentation/cubit/ticket_cubit.dart';
@@ -39,21 +40,7 @@ class _AppState extends State<App> {
     super.dispose();
   }
 
-  ThemeData _lightTheme() {
-    return ThemeData(
-      useMaterial3: true,
-      colorSchemeSeed: Colors.indigo,
-      brightness: Brightness.light,
-    );
-  }
-
-  ThemeData _darkTheme() {
-    return ThemeData(
-      useMaterial3: true,
-      colorSchemeSeed: Colors.indigo,
-      brightness: Brightness.dark,
-    );
-  }
+  // Using shared AppTheme for light/dark ThemeData
 
   @override
   Widget build(BuildContext context) {
@@ -67,8 +54,8 @@ class _AppState extends State<App> {
         builder: (context, themeMode) {
           return MaterialApp.router(
             debugShowCheckedModeBanner: false,
-            theme: _lightTheme(),
-            darkTheme: _darkTheme(),
+            theme: AppTheme.lightTheme,
+            darkTheme: AppTheme.darkTheme,
             themeMode: themeMode,
             routerConfig: _appRouter.router,
           );
