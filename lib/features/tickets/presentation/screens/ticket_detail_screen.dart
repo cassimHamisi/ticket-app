@@ -60,15 +60,24 @@ class TicketDetailScreen extends StatelessWidget {
                       currentTicket.isResolved ? 'RESOLVED' : 'OPEN',
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    avatar: Icon(
-                      currentTicket.isResolved
-                          ? Icons.check_circle
-                          : Icons.access_time,
-                      size: 18,
+                    avatar: Hero(
+                      tag: 'ticket-icon-${currentTicket.id}',
+                      child: CircleAvatar(
+                        backgroundColor: currentTicket.isResolved
+                            ? Colors.green
+                            : Theme.of(context).colorScheme.primary,
+                        child: Icon(
+                          currentTicket.isResolved
+                              ? Icons.check_circle
+                              : Icons.access_time,
+                          size: 16,
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
                     backgroundColor: currentTicket.isResolved
-                        ? Colors.green.withOpacity(0.2)
-                        : Colors.orange.withOpacity(0.2),
+                        ? Colors.green.withAlpha((0.2 * 255).round())
+                        : Colors.orange.withAlpha((0.2 * 255).round()),
                   ),
                   const SizedBox(height: 24),
 
@@ -90,26 +99,55 @@ class TicketDetailScreen extends StatelessWidget {
                   SizedBox(
                     width: double.infinity,
                     height: 56,
-                    child: FilledButton.icon(
-                      onPressed: currentTicket.isResolved
-                          ? null
-                          : () {
-                              context.read<TicketCubit>().markResolved(
-                                currentTicket.id,
-                              );
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Ticket marked as resolved'),
-                                  duration: Duration(milliseconds: 1500),
-                                ),
-                              );
-                            },
-                      icon: const Icon(Icons.check),
-                      label: Text(
-                        currentTicket.isResolved
-                            ? 'Already Resolved'
-                            : 'Mark as Resolved',
+                    child: AnimatedCrossFade(
+                      duration: const Duration(milliseconds: 300),
+                      firstChild: FilledButton.icon(
+                        onPressed: currentTicket.isResolved
+                            ? null
+                            : () {
+                                context.read<TicketCubit>().markResolved(
+                                  currentTicket.id,
+                                );
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Ticket marked as resolved'),
+                                    duration: Duration(milliseconds: 1500),
+                                  ),
+                                );
+                              },
+                        icon: const Icon(Icons.check),
+                        label: Text('Mark as Resolved'),
                       ),
+                      secondChild: Container(
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: Colors.green.withAlpha((0.08 * 255).round()),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: const Text(
+                          '✅ This ticket has been resolved',
+                          style: TextStyle(
+                            color: Colors.green,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      crossFadeState: currentTicket.isResolved
+                          ? CrossFadeState.showSecond
+                          : CrossFadeState.showFirst,
+                      layoutBuilder:
+                          (topChild, topKey, bottomChild, bottomKey) {
+                            return Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                Positioned.fill(
+                                  key: bottomKey,
+                                  child: bottomChild,
+                                ),
+                                Positioned.fill(key: topKey, child: topChild),
+                              ],
+                            );
+                          },
                     ),
                   ),
                 ],

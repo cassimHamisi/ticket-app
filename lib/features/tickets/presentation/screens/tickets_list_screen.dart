@@ -103,7 +103,7 @@ class TicketCard extends StatelessWidget {
       elevation: 0,
       clipBehavior: Clip.antiAlias,
       color: isResolved
-          ? colorScheme.surfaceContainerHighest.withOpacity(0.5)
+          ? colorScheme.surfaceContainerHighest.withAlpha((0.5 * 255).round())
           : colorScheme.surfaceContainerHigh,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
@@ -118,16 +118,19 @@ class TicketCard extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CircleAvatar(
-                backgroundColor: isResolved
-                    ? Colors.green
-                    : colorScheme.primary,
-                child: Icon(
-                  isResolved
-                      ? Icons.check_circle
-                      : Icons.confirmation_number_outlined,
-                  color: Colors.white,
-                  size: 20,
+              Hero(
+                tag: 'ticket-icon-${ticket.id}',
+                child: CircleAvatar(
+                  backgroundColor: isResolved
+                      ? Colors.green
+                      : colorScheme.primary,
+                  child: Icon(
+                    isResolved
+                        ? Icons.check_circle
+                        : Icons.confirmation_number_outlined,
+                    color: Colors.white,
+                    size: 20,
+                  ),
                 ),
               ),
               const SizedBox(width: 16),
