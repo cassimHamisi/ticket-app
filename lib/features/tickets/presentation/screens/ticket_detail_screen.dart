@@ -61,17 +61,20 @@ class TicketDetailScreen extends StatelessWidget {
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                     avatar: Hero(
-                      tag: 'ticket-icon-${currentTicket.id}',
-                      child: CircleAvatar(
-                        backgroundColor: currentTicket.isResolved
-                            ? Colors.green
-                            : Theme.of(context).colorScheme.primary,
-                        child: Icon(
-                          currentTicket.isResolved
-                              ? Icons.check_circle
-                              : Icons.access_time,
-                          size: 16,
-                          color: Colors.white,
+                      tag: 'ticket-hero-${currentTicket.id}',
+                      child: Material(
+                        color: Colors.transparent,
+                        child: CircleAvatar(
+                          backgroundColor: currentTicket.isResolved
+                              ? Colors.green
+                              : Theme.of(context).colorScheme.primary,
+                          child: Icon(
+                            currentTicket.isResolved
+                                ? Icons.check_circle
+                                : Icons.confirmation_number_outlined,
+                            size: 16,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ),
@@ -96,58 +99,67 @@ class TicketDetailScreen extends StatelessWidget {
                   const SizedBox(height: 32),
 
                   // Mark as Resolved Button
-                  SizedBox(
-                    width: double.infinity,
-                    height: 56,
-                    child: AnimatedCrossFade(
-                      duration: const Duration(milliseconds: 300),
-                      firstChild: FilledButton.icon(
-                        onPressed: currentTicket.isResolved
-                            ? null
-                            : () {
-                                context.read<TicketCubit>().markResolved(
-                                  currentTicket.id,
-                                );
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text('Ticket marked as resolved'),
-                                    duration: Duration(milliseconds: 1500),
-                                  ),
-                                );
-                              },
-                        icon: const Icon(Icons.check),
-                        label: Text('Mark as Resolved'),
-                      ),
-                      secondChild: Container(
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          color: Colors.green.withAlpha((0.08 * 255).round()),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: const Text(
-                          '✅ This ticket has been resolved',
-                          style: TextStyle(
-                            color: Colors.green,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      crossFadeState: currentTicket.isResolved
-                          ? CrossFadeState.showSecond
-                          : CrossFadeState.showFirst,
-                      layoutBuilder:
-                          (topChild, topKey, bottomChild, bottomKey) {
-                            return Stack(
-                              alignment: Alignment.center,
-                              children: [
-                                Positioned.fill(
-                                  key: bottomKey,
-                                  child: bottomChild,
-                                ),
-                                Positioned.fill(key: topKey, child: topChild),
-                              ],
+                  GestureDetector(
+                    onTap: currentTicket.isResolved
+                        ? null
+                        : () {
+                            context.read<TicketCubit>().markResolved(
+                              currentTicket.id,
+                            );
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Ticket marked as resolved'),
+                                duration: Duration(milliseconds: 1500),
+                              ),
                             );
                           },
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 400),
+                      curve: Curves.easeInOut,
+                      width: double.infinity,
+                      height: 56,
+                      decoration: BoxDecoration(
+                        color: currentTicket.isResolved
+                            ? Colors.green.withAlpha((0.15 * 255).round())
+                            : Theme.of(context).colorScheme.primary,
+                        borderRadius: BorderRadius.circular(
+                          currentTicket.isResolved ? 30 : 8,
+                        ),
+                      ),
+                      child: Center(
+                        child: AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 300),
+                          child: currentTicket.isResolved
+                              ? Row(
+                                  key: const ValueKey('resolved'),
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      Icons.check_circle,
+                                      color: Colors.green[700],
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Text(
+                                      'Resolved',
+                                      style: TextStyle(
+                                        color: Colors.green[700],
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              : const Text(
+                                  key: ValueKey('mark-resolved'),
+                                  'Mark as Resolved',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                        ),
+                      ),
                     ),
                   ),
                 ],

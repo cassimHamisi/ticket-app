@@ -44,12 +44,21 @@ class AppRouter {
               GoRoute(
                 path: 'details',
                 parentNavigatorKey: _rootNavigatorKey,
-                builder: (context, state) {
+                pageBuilder: (context, state) {
                   final extra = state.extra;
-                  if (extra is Ticket) {
-                    return TicketDetailScreen(ticket: extra);
-                  }
-                  return const TicketDetailScreen(ticket: null);
+                  return CustomTransitionPage(
+                    key: state.pageKey,
+                    child: extra is Ticket
+                        ? TicketDetailScreen(ticket: extra)
+                        : const TicketDetailScreen(ticket: null),
+                    transitionsBuilder:
+                        (context, animation, secondaryAnimation, child) {
+                          return FadeTransition(
+                            opacity: animation,
+                            child: child,
+                          );
+                        },
+                  );
                 },
               ),
             ],

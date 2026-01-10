@@ -73,9 +73,21 @@ class _TicketsListScreenState extends State<TicketsListScreen> {
                   itemCount: state.tickets.length,
                   itemBuilder: (context, index) {
                     final ticket = state.tickets[index];
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 12),
-                      child: TicketCard(ticket: ticket),
+                    return TweenAnimationBuilder<double>(
+                      tween: Tween(begin: 0.0, end: 1.0),
+                      duration: Duration(milliseconds: 400 + (index * 100)),
+                      builder: (context, value, child) {
+                        return Opacity(
+                          opacity: value,
+                          child: Transform.translate(
+                            offset: Offset(0, 20 * (1 - value)),
+                            child: Padding(
+                              padding: const EdgeInsets.only(bottom: 12),
+                              child: TicketCard(ticket: ticket),
+                            ),
+                          ),
+                        );
+                      },
                     );
                   },
                 ),
@@ -119,17 +131,20 @@ class TicketCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Hero(
-                tag: 'ticket-icon-${ticket.id}',
-                child: CircleAvatar(
-                  backgroundColor: isResolved
-                      ? Colors.green
-                      : colorScheme.primary,
-                  child: Icon(
-                    isResolved
-                        ? Icons.check_circle
-                        : Icons.confirmation_number_outlined,
-                    color: Colors.white,
-                    size: 20,
+                tag: 'ticket-hero-${ticket.id}',
+                child: Material(
+                  color: Colors.transparent,
+                  child: CircleAvatar(
+                    backgroundColor: isResolved
+                        ? Colors.green
+                        : colorScheme.primary,
+                    child: Icon(
+                      isResolved
+                          ? Icons.check_circle
+                          : Icons.confirmation_number_outlined,
+                      color: Colors.white,
+                      size: 20,
+                    ),
                   ),
                 ),
               ),
