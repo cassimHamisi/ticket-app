@@ -5,7 +5,9 @@ A modern, responsive Flutter application built as a technical assessment for the
 ## 🚀 Main Highlights & Achievements
 
 ### ✅ Clean Architecture
+
 Implemented a strict separation of concerns using **Data**, **Domain**, and **Presentation** layers:
+
 - **Data Layer**: Remote API calls via Dio, local data models, repository implementations
 - **Domain Layer**: Business logic entities, use cases, and abstract repository contracts
 - **Presentation Layer**: UI widgets, Cubits for state management, responsive screens
@@ -13,6 +15,7 @@ Implemented a strict separation of concerns using **Data**, **Domain**, and **Pr
 This architecture ensures scalability, testability, and maintainability across the codebase.
 
 ### ✅ State Management with Cubit (BLoC Pattern)
+
 - **AuthCubit**: Handles login/logout and persists authentication state
 - **TicketCubit**: Manages ticket fetching, filtering, and resolved status tracking
 - **ThemeCubit**: Toggles between light and dark modes
@@ -20,6 +23,7 @@ This architecture ensures scalability, testability, and maintainability across t
 All Cubits extend `HydratedCubit` for automatic persistence.
 
 ### ✅ Persistent Local State via Hydrated BLoC
+
 - **Authentication**: Login state persists across app restarts
 - **Ticket Resolution**: "Marked as Resolved" status is saved locally and survives app closure
 - **Theme Preference**: Dark mode selection is remembered
@@ -27,12 +31,14 @@ All Cubits extend `HydratedCubit` for automatic persistence.
 Platform-aware: Gracefully handles both mobile and web platforms without native plugin conflicts.
 
 ### ✅ Material 3 & Dark Mode Support
+
 - Full Material 3 design implementation with dynamic color theming
 - Semantic color usage (primary, surface, error, outline)
 - Responsive layouts using Material widgets (Cards, Chips, Badges, FilledButtons)
 - Seamless dark/light mode toggle on Profile screen
 
 ### ✅ Declarative Routing with GoRouter
+
 - **ShellRoute** for bottom navigation (Tickets & Profile tabs)
 - **Sub-routes** for ticket detail screen with parameter passing
 - **Auth-aware redirects** to automatically route to login if not authenticated
@@ -42,23 +48,24 @@ Platform-aware: Gracefully handles both mobile and web platforms without native 
 
 ## 🛠️ Technical Stack
 
-| Layer | Technology |
-|-------|-----------|
-| **Framework** | Flutter (Latest Stable) |
-| **Language** | Dart 3.10.4+ |
-| **State Management** | flutter_bloc (8.1.6) + hydrated_bloc (9.1.5) |
-| **Navigation** | go_router (14.6.2) |
-| **Local Storage** | hydrated_bloc (automatic JSON serialization) |
-| **Networking** | dio (5.7.0) |
-| **Dependency Injection** | get_it (8.0.2) |
-| **Functional Programming** | dartz (0.10.1) - Either/Or pattern |
-| **Design** | Material 3 with cupertino_icons |
+| Layer                      | Technology                                   |
+| -------------------------- | -------------------------------------------- |
+| **Framework**              | Flutter (Latest Stable)                      |
+| **Language**               | Dart 3.10.4+                                 |
+| **State Management**       | flutter_bloc (8.1.6) + hydrated_bloc (9.1.5) |
+| **Navigation**             | go_router (14.6.2)                           |
+| **Local Storage**          | hydrated_bloc (automatic JSON serialization) |
+| **Networking**             | dio (5.7.0)                                  |
+| **Dependency Injection**   | get_it (8.0.2)                               |
+| **Functional Programming** | dartz (0.10.1) - Either/Or pattern           |
+| **Design**                 | Material 3 with cupertino_icons              |
 
 ---
 
 ## 📋 Features Implemented
 
 ### 1️⃣ Mocked Authentication
+
 - **Login Screen** with Material 3 form design
 - Email and password validation
 - Loading indicator during login
@@ -67,6 +74,7 @@ Platform-aware: Gracefully handles both mobile and web platforms without native 
 - Auto-redirect to tickets when authenticated
 
 ### 2️⃣ Ticket Management
+
 - **Fetch Real-time Data**: Connects to [JSONPlaceholder API](https://jsonplaceholder.typicode.com/posts)
 - **Creative Material 3 Card UI**:
   - Dynamic background color based on resolved status
@@ -74,8 +82,8 @@ Platform-aware: Gracefully handles both mobile and web platforms without native 
   - Strikethrough title for resolved tickets
   - Green "Resolved" badge for marked tickets
   - Ripple effect on tap (InkWell)
-  
 - **Detailed View**:
+
   - Full ticket title and description
   - Status chip showing OPEN/RESOLVED
   - AppBar icon indicator for resolved status
@@ -89,6 +97,7 @@ Platform-aware: Gracefully handles both mobile and web platforms without native 
   - SnackBar confirmation
 
 ### 3️⃣ Profile Management
+
 - **User Information Card**: Avatar + name/email
 - **Settings Section**: Dark mode toggle (persisted)
 - **About Section**: App version and tech stack info
@@ -96,6 +105,7 @@ Platform-aware: Gracefully handles both mobile and web platforms without native 
 - Material 3 card-based layout
 
 ### 4️⃣ Responsive Design
+
 - Optimized for mobile, tablet, and desktop
 - Adaptive widgets (CircularProgressIndicator.adaptive, Switch.adaptive)
 - Proper padding and spacing using EdgeInsets
@@ -174,6 +184,7 @@ lib/
 ## 🔄 State Persistence & Navigation Flow
 
 ### Authentication Flow
+
 1. User taps "Login" → `AuthCubit.login()` is called
 2. After mock delay, `isAuthenticated` state changes to `true`
 3. Hydrated BLoC persists this to local storage
@@ -181,6 +192,7 @@ lib/
 5. On app restart, Hydrated restores the auth state automatically
 
 ### Ticket Resolution Flow
+
 1. User navigates to ticket detail screen
 2. Taps "Mark as Resolved" → `TicketCubit.markResolved(ticketId)` is called
 3. Ticket state updates immediately, UI rebuilds with strikethrough title
@@ -188,6 +200,7 @@ lib/
 5. On app restart, the resolved status is restored
 
 ### Platform Support
+
 - **Mobile (Android/iOS)**: Full persistence via Hydrated BLoC with file system storage
 - **Web**: Graceful fallback (skips file system, uses default browser storage)
 
@@ -196,6 +209,7 @@ lib/
 ## 🚀 How to Run
 
 ### Prerequisites
+
 - Flutter SDK (latest stable)
 - Dart 3.10.4 or higher
 - An IDE (VS Code, Android Studio, or Xcode)
@@ -203,30 +217,36 @@ lib/
 ### Steps
 
 1. **Clone the repository**:
+
    ```bash
    git clone https://github.com/YOUR_USERNAME/ticket_app.git
    cd ticket_app
    ```
 
 2. **Install dependencies**:
+
    ```bash
    flutter pub get
    ```
 
 3. **Run the app** (on mobile/emulator):
+
    ```bash
    flutter run
    ```
 
 4. **Run on web**:
+
    ```bash
    flutter run -d web
    ```
 
 5. **Build release APK** (Android):
+
    ```bash
    flutter build apk --release
    ```
+
    The APK will be generated at `build/app/outputs/flutter-app-release.apk`
 
 6. **Build release iOS** (macOS only):
@@ -239,6 +259,7 @@ lib/
 ## ✨ Testing Persistence
 
 ### How to Verify Hydrated BLoC Works
+
 1. Login to the app
 2. Navigate to Tickets, mark a ticket as resolved (green checkmark appears)
 3. **Force close** the app or use `flutter run` to restart
@@ -252,6 +273,7 @@ lib/
 ## 📦 Build Output
 
 The built APK is available in:
+
 - **Mobile**: `build/app/outputs/flutter-app-release.apk`
 - **Web**: `build/web/` (serve with a static server)
 
@@ -260,23 +282,27 @@ The built APK is available in:
 ## 🎯 Key Design Decisions
 
 ### 1. Hydrated BLoC Over SharedPreferences
+
 - Automatically handles serialization/deserialization
 - Reduces boilerplate code
 - Type-safe state management
 - Seamless integration with Cubit
 
 ### 2. Either/Or Pattern (Dartz)
+
 - Clear separation between success (Right) and failure (Left)
 - Functional approach to error handling
 - Repository pattern returns `Either<Failure, T>`
 
 ### 3. Material 3 Design
+
 - Future-proof design system
 - Dynamic color theming support
 - Semantic color usage for accessibility
 - Brand consistency across light and dark modes
 
 ### 4. GoRouter for Navigation
+
 - Declarative routing (easier to understand flow)
 - Support for deep linking
 - Auth-aware redirects
@@ -294,33 +320,6 @@ The built APK is available in:
 - [ ] Implement pagination for large ticket lists
 - [ ] Add export/share ticket functionality
 - [ ] Localization support (multiple languages)
-
----
-
-## 📧 Submission Details
-
-### For InterIntel Review:
-- **Repository**: Ensure all code is clean and well-documented
-- **APK**: Included in `/build/app/outputs/` or GitHub Releases
-- **Contact**: Submit repository link to:
-  - jerome.jumah@interintel.co.ke
-  - hr@interintel.co.ke
-
-### Checklist Before Submission:
-- ✅ Clean Architecture implemented (Data/Domain/Presentation)
-- ✅ BLoC/Cubit state management with Hydrated persistence
-- ✅ GoRouter navigation with bottom tabs
-- ✅ Material 3 design + Dark mode
-- ✅ Login with persistent state
-- ✅ Ticket list with creative card design
-- ✅ Ticket detail with "Mark as Resolved" functionality
-- ✅ Profile screen with logout and theme toggle
-- ✅ Error handling and loading states
-- ✅ Responsive design
-- ✅ Platform-aware code (mobile/web)
-- ✅ README with clear instructions
-
----
 
 ## 📄 License
 
